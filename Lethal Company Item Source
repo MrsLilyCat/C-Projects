@@ -1,0 +1,93 @@
+using BepInEx;
+using HarmonyLib;
+using LethalLib.Modules;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+namespace scarlet_item
+{
+    [BepInPlugin(GUID, NAME, VERSION)]
+
+    public class plugin : BaseUnityPlugin
+    {
+        const string GUID = "item";
+        const string NAME = "item";
+        const string VERSION = "0.0.1";
+
+        public static plugin instance;
+
+        void Awake()
+        {
+            instance = this;
+
+            string assetDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "item");
+            AssetBundle bundle = AssetBundle.LoadFromFile(assetDir);
+            TerminalNode node = ScriptableObject.CreateInstance<TerminalNode>();
+            node.clearPreviousText = true;
+
+            Item scarlet_item = bundle.LoadAsset<Item>("Assets/Item/Scarlet/Scarlet.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(scarlet_item.spawnPrefab);
+            Utilities.FixMixerGroups(scarlet_item.spawnPrefab);
+            Items.RegisterScrap(scarlet_item, 45, Levels.LevelTypes.All);
+            Items.RegisterShopItem(scarlet_item, null, null, node, 0);
+            Item RedCoin = bundle.LoadAsset<Item>("Assets/Item/Red Coin/RedCoin.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(RedCoin.spawnPrefab);
+            Utilities.FixMixerGroups(RedCoin.spawnPrefab);
+            Items.RegisterScrap(RedCoin, 60, Levels.LevelTypes.All);
+            Item StarSpawner = bundle.LoadAsset<Item>("Assets/Item/Star Spawner/StarSpawner.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(StarSpawner.spawnPrefab);
+            Utilities.FixMixerGroups(StarSpawner.spawnPrefab);
+            Items.RegisterScrap(StarSpawner, 45, Levels.LevelTypes.All);
+            Item Star = bundle.LoadAsset<Item>("Assets/Item/Star/Star.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(Star.spawnPrefab);
+            Utilities.FixMixerGroups(Star.spawnPrefab);
+            Items.RegisterScrap(Star, 45, Levels.LevelTypes.All);
+            Item BDR = bundle.LoadAsset<Item>("Assets/Item/Bowsers Dank Rave/BDR.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(BDR.spawnPrefab);
+            Utilities.FixMixerGroups(BDR.spawnPrefab);
+            Items.RegisterScrap(BDR, 15, Levels.LevelTypes.All);
+            Item KatxPainting = bundle.LoadAsset<Item>("Assets/Item/Katx painting/KatxPainting.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(KatxPainting.spawnPrefab);
+            Utilities.FixMixerGroups(KatxPainting.spawnPrefab);
+            Items.RegisterScrap(KatxPainting, 50, Levels.LevelTypes.All);
+            Item MW3 = bundle.LoadAsset<Item>("Assets/Item/Call of Duty/MW3.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(MW3.spawnPrefab);
+            Utilities.FixMixerGroups(MW3.spawnPrefab);
+            Items.RegisterScrap(MW3, 50, Levels.LevelTypes.All);
+            Item YouDay = bundle.LoadAsset<Item>("Assets/Item/You Day/YouDay.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(YouDay.spawnPrefab);
+            Utilities.FixMixerGroups(YouDay.spawnPrefab);
+            Items.RegisterScrap(YouDay, 6, Levels.LevelTypes.All);
+            Item RedStar = bundle.LoadAsset<Item>("Assets/Item/Red Star/Star Red.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(RedStar.spawnPrefab);
+            Utilities.FixMixerGroups(RedStar.spawnPrefab);
+            Items.RegisterScrap(RedStar, 45, Levels.LevelTypes.All);
+            Item GreenStar = bundle.LoadAsset<Item>("Assets/Item/Green Star/Green Star.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(GreenStar.spawnPrefab);
+            Utilities.FixMixerGroups(GreenStar.spawnPrefab);
+            Items.RegisterScrap(GreenStar, 45, Levels.LevelTypes.All);
+            Item YouDayTv = bundle.LoadAsset<Item>("Assets/Item/YouDayTv/YouDayTv.asset");
+            NetworkPrefabs.RegisterNetworkPrefab(YouDayTv.spawnPrefab);
+            Utilities.FixMixerGroups(YouDayTv.spawnPrefab);
+            Items.RegisterScrap(YouDayTv, 1000, Levels.LevelTypes.All);
+            Logger.LogInfo("Your shit is patched");
+        }
+    }
+}
+namespace scarlet_item.behaviors
+{
+    internal class Damageplayer : Shovel
+    {
+        public override void ItemActivate(bool used, bool buttonDown = true)
+        {
+            ((Shovel)this).ItemActivate(used, buttonDown);
+            if (buttonDown)
+            {
+                ((GrabbableObject)this).playerHeldBy.ClickHoldInteraction();
+            }
+        }
+    }
+}
